@@ -1,40 +1,22 @@
-import streamlit as st
-from datetime import datetime
-import json
-import os
-
-def afficher():
-    # TITRE DU MANTRA
-    st.markdown("### ✨ L'Action Alchimique")
-
-    # TOUT LE CONTENU DANS UN SEUL BLOC (Zéro erreur possible)
-    st.markdown("""
-        <div style="background-color: #fff4e6; padding: 25px; border-radius: 15px; border-left: 8px solid #f39c12; margin-bottom: 20px;">
-            <h3 style="color: #d35400; margin-top: 0;">
-                "Aide-toi, le ciel t'aidera, mais ça commence par 'aide-toi'."
-            </h3>
-            <p style="font-size: 1.1em; color: #a04000;">
-                Le principe de l'engagement : la vibration ne répond qu'à l'impulsion initiale de l'homme.
-            </p>
-        </div>
-
-        <div style="background-color: #fdf2f2; padding: 15px; border-radius: 10px; border: 1px solid #f5c6cb; color: #721c24; margin-bottom: 20px;">
-            <h4 style="margin-top:0;">"Si vous ne faites rien, il ne se passera rien."</h4>
-            <p><i>Contre l'illusion d'une spiritualité passive. L'œuvre demande de mettre la main à la pâte.</i></p>
-        </div>
-
-        <hr style="border: 0; height: 1px; background: #eee; margin: 30px 0;">
-
-        <div style="line-height: 1.6; color: #2c3e50; font-size: 1.1em;">
-            <strong>L'enseignement de Patrick :</strong> L'alchimie n'est pas une pensée, c'est un laboratoire (Labor + Ora). 
-            Le "Ciel" ou la "Vibration" attend que vous posiez le premier pion sur l'échiquier. 
-            Tant que la main ne bouge pas, la résonance reste silencieuse. L'intention doit s'incarner 
-            dans un geste concret pour devenir une réalité vibratoire.
-        </div>
-
-        <div style="text-align: center; margin-top: 50px;">
-            <p style="font-family: serif; font-size: 2em; color: #f39c12;">
-                Vivez joyeux !
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
+[
+  {
+    "id": "action_alchimique",
+    "titre": "✨ L'Action Alchimique",
+    "html_content": "<div style='background-color: #fff4e6; padding: 25px; border-radius: 15px; border-left: 8px solid #f39c12; margin-bottom: 20px;'><h3 style='color: #d35400; margin-top: 0;'>\"Aide-toi, le ciel t'aidera, mais ça commence par 'aide-toi'.\"</h3><p style='font-size: 1.1em; color: #a04000;'>Le principe de l'engagement : la vibration ne répond qu'à l'impulsion initiale de l'homme.</p></div><div style='background-color: #fdf2f2; padding: 15px; border-radius: 10px; border: 1px solid #f5c6cb; color: #721c24; margin-bottom: 20px;'><h4 style='margin-top:0;'>\"Si vous ne faites rien, il ne se passera rien.\"</h4><p><i>Contre l'illusion d'une spiritualité passive. L'œuvre demande de mettre la main à la pâte.</i></p></div><hr style='border: 0; height: 1px; background: #eee; margin: 30px 0;'><div style='line-height: 1.6; color: #2c3e50; font-size: 1.1em;'><strong>L'enseignement de Patrick :</strong> L'alchimie n'est pas une pensée, c'est un laboratoire (Labor + Ora). Le \"Ciel\" ou la \"Vibration\" attend que vous posiez le premier pion sur l'échiquier. Tant que la main ne bouge pas, la résonance reste silencieuse. L'intention doit s'incarner dans un geste concret pour devenir une réalité vibratoire.</div><div style='text-align: center; margin-top: 50px;'><p style='font-family: serif; font-size: 2em; color: #f39c12;'>Vivez joyeux !</p></div>"
+  },
+  {
+    "id": "protection_seuil",
+    "titre": "🛡️ La Protection du Seuil",
+    "html_content": "<div style='background-color: #f0f2f6; padding: 20px; border-radius: 10px; border-left: 5px solid #5d6d7e;'><h4 style='color: #2e4053; margin-bottom: 10px;'>\"Le sel cubique fixe l'invisible pour protéger mon visible.\"</h4><p style='font-style: italic; color: #566573;'>Utiliser la structure stable de la matière pour ancrer une intention de sécurité.</p></div><br><div style='background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 10px;'><h4>\"Le sel purifie ce qui entre, mais il ne doit pas stagner dans l'oubli.\"</h4><i>Une protection non entretenue devient une cage. Renouvelez votre regard et vos outils.</i></div><hr><p><strong>L'enseignement de Patrick :</strong> Le sel n'est pas une barrière magique passive. C'est un réceptacle géométrique (le cube) qui sature. Si vous oubliez votre protection, elle finit par emprisonner ce qu'elle était censée filtrer. Sceller son seuil demande une attention vivante, pas une habitude morte.</p>"
+  },
+  {
+    "id": "prudence_initie",
+    "titre": "👁️ La Prudence de l'Initié",
+    "html_content": "<blockquote style='font-size: 1.2em; border-left: 5px solid #ccc; padding-left: 15px;'><strong>\"Ne soyez pas une mouche curieuse dans la toile d'araignée de l'invisible ; sachez ce que vous ouvrez.\"</strong></blockquote><hr><p><i>L'enseignement de Patrick Burenstinas nous rappelle que la connaissance est une responsabilité. Ne déclenchez pas ce que vous ne savez pas refermer.</i></p>"
+  },
+  {
+    "id": "souffle_chanson",
+    "titre": "🎶 Le Souffle et la Chanson",
+    "html_content": "<div style='background-color: #fdfefe; padding: 25px; border-radius: 50px; border: 2px solid #aeb6bf; text-align: center;'><h3 style='color: #2c3e50;'>\"On est peut-être juste une chanson particulière qui ordonne la matière.\"</h3></div><br><strong>Méditation sur la Vibration :</strong><p>Si la matière est une partition, votre conscience est le chef d'orchestre. Chaque pensée, chaque mouvement \"accorde\" votre instrument biologique. Si vous chantez juste, votre matière s'ordonne.</p><hr><p><i>« Le corps n'est qu'un poste de radio... j'éteins le poste, mais je ne tue pas le chanteur. »</i></p>"
+  }
+]

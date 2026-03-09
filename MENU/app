@@ -94,30 +94,42 @@ with tab_exos:
                 afficher_fiche(dossier, choix)
 
 with tab_mantras:
-    st.markdown("<h3 style='text-align:center;'>Oracle & Bibliothèque</h3>", unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    
-    dossier = "mantras"
-    path = f"database/{dossier}"
-    
-    if os.path.exists(path):
-        fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
-        
-        with col1:
-            if st.button("🔮 Tirage au sort"):
-                st.session_state['m_view'] = "random"
-                st.session_state['current_m'] = random.choice(fichiers)
-        
-        with col2:
-            if st.button("📖 Choisir"):
-                st.session_state['m_view'] = "list"
 
-        # Affichage selon le mode choisi
-        if st.session_state.get('m_view') == "list":
-            choix = st.selectbox("Liste des mantras :", fichiers, key="sel_m_manual")
-            afficher_fiche(dossier, choix)
-        elif st.session_state.get('current_m'):
-            afficher_fiche(dossier, st.session_state['current_m'])
+def afficher_page_mantras():
+    st.title("📜 Grimoire des Mantras")
+
+    # 1. Chargement sécurisé du fichier JSON
+    try:
+        with open('data/mantras.json', 'r', encoding='utf-8') as f:
+            mantras = json.load(f)
+    except FileNotFoundError:
+        st.error("Le fichier mantras.json est introuvable dans le dossier data.")
+        return
+
+    # 2. Le bouton de tirage au sort
+    if st.button("✨ Recevoir une guidance aléatoire"):
+        selection = random.choice(mantras)
+        
+        st.divider()
+        st.subheader(selection['titre'])
+        # C'est ici que la magie opère : on affiche le contenu HTML stocké
+        st.markdown(selection['html_content'], unsafe_allow_html=True)
+        st.divider()
+
+    # 3. Option pour choisir un mantra précis dans une liste
+    st.sidebar.title("Navigation")
+    titres = [m['titre'] for m in mantras]
+    choix = st.sidebar.selectbox("Choisir un enseignement :", titres)
+    
+    for m in mantras:
+        if m['titre'] == choix:
+            st.write("---")
+            st.markdown(f"### {m['titre']}")
+            st.markdown(m['html_content'], unsafe_allow_html=True)
+
+# Lancer la fonction
+if __name__ == "__main__":
+    afficher_page_mantras()
 
 with tab_vocab:
     dossier = "vocabulaire"
