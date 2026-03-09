@@ -1,0 +1,136 @@
+import streamlit as st
+import os
+import importlib.util
+import sys
+import random
+
+# --- 1. CONFIGURATION ---
+st.set_page_config(page_title="Espace de Pratique", page_icon="✨", layout="centered")
+
+# --- 2. STYLE CSS AMÉLIORÉ (Correction Onglets) ---
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+    html, body, [class*="css"], .stMarkdown { font-family: 'Quicksand', sans-serif !important; }
+    
+    /* Force le défilement horizontal des onglets sur mobile */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        display: flex;
+        justify-content: flex-start !important;
+    }
+    .stTabs [data-baseweb="tab"] {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    .main-title { color: #455A64; text-align: center; font-size: 26px; font-weight: 700; }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- 3. MOTEUR DE CHARGEMENT ---
+def afficher_fiche(categorie, nom_fichier):
+    chemin = f"database/{categorie}/{nom_fichier}"
+    if os.path.exists(chemin):
+        try:
+            # Nettoyage de la zone pour éviter le bloc rouge
+            nom_unique = f"mod_{random.randint(0, 99999)}"
+            spec = importlib.util.spec_from_file_location(nom_unique, chemin)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            if hasattr(mod, 'afficher'):
+                st.divider()
+                mod.afficher()
+        except Exception as e:
+            st.error(f"Fiche indisponible : {e}")
+    else:
+        st.error(f"Fichier non trouvé : {chemin}")
+
+# --- 4. CONNEXION ---
+if "connected" not in st.session_state:
+    st.session_state["connected"] = False
+
+if not st.session_state["connected"]:
+    if os.path.exists("assets/banniere.jpg"):
+        st.image("assets/banniere.jpg", use_container_width=True)
+    st.markdown("<h1 class='main-title'>Bienvenue</h1>", unsafe_allow_html=True)
+    email = st.text_input("Email :").lower().strip()
+    if st.button("Entrer"):
+        if "@" in email:
+            st.session_state["connected"] = True
+            st.session_state["email"] = email
+            if not os.path.exists(f"data/{email}"): os.makedirs(f"data/{email}", exist_ok=True)
+            st.rerun()
+    st.stop()
+
+# --- 5. INTERFACE ---
+if os.path.exists("assets/banniere.jpg"):
+    st.image("assets/banniere.jpg", use_container_width=True)
+
+tab_lecons, tab_exos, tab_mantras, tab_vocab = st.tabs([
+    "📚 LEÇONS", "🧘 EXERCICES", "✨ MANTRAS", "📖 VOCAB"
+])
+
+with tab_lecons:
+    dossier = "lecons"
+    path = f"database/{dossier}"
+    if os.path.exists(path):
+        fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
+        if fichiers:
+            choix = st.selectbox("Choisir une leçon :", fichiers, key="sel_l")
+            afficher_fiche(dossier, choix)
+
+with tab_exos:
+    # Utilisation de st.empty() pour "nettoyer" le bloc rouge
+    zone_exo = st.empty()
+    with zone_exo.container():
+        dossier = "exercices"
+        path = f"database/{dossier}"
+        if os.path.exists(path):
+            fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
+            if fichiers:
+                choix = st.selectbox("Choisir un exercice :", fichiers, key="sel_e_stable")
+                afficher_fiche(dossier, choix)
+
+with tab_mantras:
+    st.markdown("<h3 style='text-align:center;'>Oracle & Bibliothèque</h3>", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+    
+    dossier = "mantras"
+    path = f"database/{dossier}"
+    
+    if os.path.exists(path):
+        fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
+        
+        with col1:
+            if st.button("🔮 Tirage au sort"):
+                st.session_state['m_view'] = "random"
+                st.session_state['current_m'] = random.choice(fichiers)
+        
+        with col2:
+            if st.button("📖 Choisir"):
+                st.session_state['m_view'] = "list"
+
+        # Affichage selon le mode choisi
+        if st.session_state.get('m_view') == "list":
+            choix = st.selectbox("Liste des mantras :", fichiers, key="sel_m_manual")
+            afficher_fiche(dossier, choix)
+        elif st.session_state.get('current_m'):
+            afficher_fiche(dossier, st.session_state['current_m'])
+
+with tab_vocab:
+    dossier = "vocabulaire"
+    path = f"database/{dossier}"
+    if os.path.exists(path):
+        fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
+        if fichiers:
+            choix = st.selectbox("Définition :", fichiers, key="sel_v")
+            afficher_fiche(dossier, choix)
+
+# --- 6. DÉCONNEXION ---
+st.sidebar.write(f"👤 {st.session_state['email']}")
+if st.sidebar.button("🚪 Déconnexion"):
+    st.session_state["connected"] = False
+    st.rerun()
+    
