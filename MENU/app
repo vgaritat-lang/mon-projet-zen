@@ -3,58 +3,93 @@ import os
 import importlib.util
 import sys
 import random
+import json
+import pandas as pd
 
 # --- 1. CONFIGURATION ---
-st.set_page_config(page_title="Espace de Pratique", page_icon="✨", layout="centered")
+st.set_page_config(page_title="L'Alchimie du Vivant", page_icon="✨", layout="centered")
 
-# --- 2. STYLE CSS AMÉLIORÉ (Correction Onglets) ---
+# --- 2. STYLE CSS (Optimisé pour Mobile et Onglets) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
     html, body, [class*="css"], .stMarkdown { font-family: 'Quicksand', sans-serif !important; }
     
-    /* Force le défilement horizontal des onglets sur mobile */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        overflow-x: auto;
-        white-space: nowrap;
-        display: flex;
-        justify-content: flex-start !important;
+        overflow-x: auto; white-space: nowrap; display: flex;
     }
-    .stTabs [data-baseweb="tab"] {
-        padding: 8px 12px;
-        font-size: 14px;
-    }
+    .stTabs [data-baseweb="tab"] { padding: 8px 12px; font-size: 14px; }
     .main-title { color: #455A64; text-align: center; font-size: 26px; font-weight: 700; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. MOTEUR DE CHARGEMENT ---
+# --- 3. MOTEURS DE CHARGEMENT ---
+
+# Moteur pour les fichiers .py (Leçons, Exos, Vocab)
 def afficher_fiche(categorie, nom_fichier):
+    # On cherche dans "database" comme dans votre structure
     chemin = f"database/{categorie}/{nom_fichier}"
     if os.path.exists(chemin):
         try:
-            # Nettoyage de la zone pour éviter le bloc rouge
             nom_unique = f"mod_{random.randint(0, 99999)}"
             spec = importlib.util.spec_from_file_location(nom_unique, chemin)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             if hasattr(mod, 'afficher'):
-                st.divider()
                 mod.afficher()
         except Exception as e:
             st.error(f"Fiche indisponible : {e}")
     else:
         st.error(f"Fichier non trouvé : {chemin}")
 
+# Moteur pour les Mantras (JSON)
+def moteur_mantras():
+    try:
+        with open('data/mantras.json', 'r', encoding='utf-8') as f:
+            mantras = json.load(f)
+        
+        col1, col2 = st.columns([2, 1])
+        with col2:
+            if st.button("✨ Tirage Aléatoire"):
+                st.session_state.selection_mantra = random.choice(mantras)
+        
+        with col1:
+            titres = [m['titre'] for m in mantras]
+            choix = st.selectbox("Parcourir le grimoire :", titres)
+            for m in mantras:
+                if m['titre'] == choix:
+                    st.session_state.selection_mantra = m
+
+        if "selection_mantra" in st.session_state:
+            sel = st.session_state.selection_mantra
+            st.divider()
+            st.subheader(sel['titre'])
+            st.markdown(sel['html_content'], unsafe_allow_html=True)
+            
+    except Exception as e:
+        st.error("Le grimoire des mantras est fermé (Erreur JSON).")
+
+# Moteur pour les Statistiques
+def moteur_stats():
+    user_email = st.session_state.get("email", "anonyme")
+    path_sel = f"data/{user_email}/suivi_Fabrication_sel.json"
+    if os.path.exists(path_sel):
+        df = pd.DataFrame(json.load(open(path_sel, "r", encoding="utf-8")))
+        st.subheader("📊 Vos Expériences")
+        c1, c2 = st.columns(2)
+        c1.metric("Opérations", len(df))
+        c2.metric("Voie Cubique", len(df[df['forme_voie'].str.contains("Cubique")]))
+        st.dataframe(df[['date', 'forme_voie', 'sel_origine']], use_container_width=True)
+    else:
+        st.info("Aucune donnée de laboratoire enregistrée.")
+
 # --- 4. CONNEXION ---
 if "connected" not in st.session_state:
     st.session_state["connected"] = False
 
 if not st.session_state["connected"]:
-    if os.path.exists("assets/banniere.jpg"):
-        st.image("assets/banniere.jpg", use_container_width=True)
-    st.markdown("<h1 class='main-title'>Bienvenue</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>L'Alchimie du Vivant</h1>", unsafe_allow_html=True)
     email = st.text_input("Email :").lower().strip()
     if st.button("Entrer"):
         if "@" in email:
@@ -64,12 +99,13 @@ if not st.session_state["connected"]:
             st.rerun()
     st.stop()
 
-# --- 5. INTERFACE ---
+# --- 5. INTERFACE PRINCIPALE (ONGLETS) ---
 if os.path.exists("assets/banniere.jpg"):
     st.image("assets/banniere.jpg", use_container_width=True)
 
-tab_lecons, tab_exos, tab_mantras, tab_vocab = st.tabs([
-    "📚 LEÇONS", "🧘 EXERCICES", "✨ MANTRAS", "📖 VOCAB"
+# Ajout de l'onglet STATS
+tab_lecons, tab_exos, tab_mantras, tab_vocab, tab_stats = st.tabs([
+    "📚 LEÇONS", "🧘 EXERCICES", "✨ MANTRAS", "📖 VOCAB", "📊 STATS"
 ])
 
 with tab_lecons:
@@ -82,54 +118,16 @@ with tab_lecons:
             afficher_fiche(dossier, choix)
 
 with tab_exos:
-    # Utilisation de st.empty() pour "nettoyer" le bloc rouge
-    zone_exo = st.empty()
-    with zone_exo.container():
-        dossier = "exercices"
-        path = f"database/{dossier}"
-        if os.path.exists(path):
-            fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
-            if fichiers:
-                choix = st.selectbox("Choisir un exercice :", fichiers, key="sel_e_stable")
-                afficher_fiche(dossier, choix)
+    dossier = "exercices"
+    path = f"database/{dossier}"
+    if os.path.exists(path):
+        fichiers = sorted([f for f in os.listdir(path) if f.endswith(".py")])
+        if fichiers:
+            choix = st.selectbox("Choisir un exercice :", fichiers, key="sel_e")
+            afficher_fiche(dossier, choix)
 
 with tab_mantras:
-
-def afficher_page_mantras():
-    st.title("📜 Grimoire des Mantras")
-
-    # 1. Chargement sécurisé du fichier JSON
-    try:
-        with open('data/mantras.json', 'r', encoding='utf-8') as f:
-            mantras = json.load(f)
-    except FileNotFoundError:
-        st.error("Le fichier mantras.json est introuvable dans le dossier data.")
-        return
-
-    # 2. Le bouton de tirage au sort
-    if st.button("✨ Recevoir une guidance aléatoire"):
-        selection = random.choice(mantras)
-        
-        st.divider()
-        st.subheader(selection['titre'])
-        # C'est ici que la magie opère : on affiche le contenu HTML stocké
-        st.markdown(selection['html_content'], unsafe_allow_html=True)
-        st.divider()
-
-    # 3. Option pour choisir un mantra précis dans une liste
-    st.sidebar.title("Navigation")
-    titres = [m['titre'] for m in mantras]
-    choix = st.sidebar.selectbox("Choisir un enseignement :", titres)
-    
-    for m in mantras:
-        if m['titre'] == choix:
-            st.write("---")
-            st.markdown(f"### {m['titre']}")
-            st.markdown(m['html_content'], unsafe_allow_html=True)
-
-# Lancer la fonction
-if __name__ == "__main__":
-    afficher_page_mantras()
+    moteur_mantras()
 
 with tab_vocab:
     dossier = "vocabulaire"
@@ -140,7 +138,13 @@ with tab_vocab:
             choix = st.selectbox("Définition :", fichiers, key="sel_v")
             afficher_fiche(dossier, choix)
 
-# --- 6. DÉCONNEXION ---
+with tab_stats:
+    moteur_stats()
+
+# --- 6. BARRE LATÉRALE (Sidebar) ---
+st.sidebar.title("👨‍🏫 Enseignant")
+enseignant = st.sidebar.selectbox("Choisir :", ["Patrick Burenstinas", "Autre"])
+st.sidebar.divider()
 st.sidebar.write(f"👤 {st.session_state['email']}")
 if st.sidebar.button("🚪 Déconnexion"):
     st.session_state["connected"] = False
