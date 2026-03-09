@@ -1,0 +1,58 @@
+{
+  "dictionnaire_alchimique": [
+    {
+      "id": "immanence",
+      "titre": "Immanence",
+      "emoji": "💎",
+      "couleur": "#2e86c1",
+      "definition": "Ce qui est contenu dans la nature même des choses, par opposition à ce qui vient du dehors (transcendance).",
+      "note_alchimique": "L'immanence suggère que la 'solution' ou la 'vibration divine' n'est pas ailleurs, mais cachée au cœur même de la matière brute. Le travail de l'alchimiste est de révéler ce qui est déjà là.",
+      "citation": "La pierre philosophale n'est pas à créer, elle est à extraire de la mine de ton propre être.",
+      "type_affichage": "definition_classique"
+    },
+    {
+      "id": "resonance",
+      "titre": "Résonance",
+      "emoji": "🎶",
+      "couleur": "#d4af37",
+      "definition": "État d'un système qui vibre en harmonie avec une fréquence extérieure.",
+      "note_alchimique": "La résonance est le pont entre l'émetteur (le monde) et le récepteur (nous). Si deux systèmes partagent la même fréquence, l'énergie circule sans perte. C'est le principe de la 'chanson particulière' qui ordonne notre matière.",
+      "citation": "Quand l'instrument est accordé, la musique de l'univers peut enfin s'y exprimer.",
+      "type_affichage": "definition_classique"
+    },
+    {
+      "id": "realite_non_ordinaire",
+      "titre": "Réalité non-ordinaire",
+      "emoji": "👁️",
+      "couleur": "#8e44ad",
+      "definition": "Perception des fréquences et des énergies qui échappent aux cinq sens classiques.",
+      "note_alchimique": "C'est l'accès au monde du 'Souffle' et de la 'Vibration'. Ce n'est pas un monde imaginaire, mais un spectre de réalité plus large que celui capté par nos filtres biologiques habituels. C'est là que se font les branchements et les échanges d'information.",
+      "citation": "L'invisible n'est pas l'inexistant, c'est simplement une fréquence que l'on n'a pas encore appris à écouter.",
+      "type_affichage": "definition_classique"
+    },
+    {
+      "id": "sel_cubique_vs_chou_fleur",
+      "titre": "Sel Cubique vs Chou-fleur",
+      "emoji": "🧂",
+      "sous_titre": "La Géométrie du Réceptacle",
+      "comparaison": {
+        "sel_cubique": {
+          "label": "Sel Cubique",
+          "icone": "🟦",
+          "description": "C'est la structure stable du sel. En alchimie, le cube est un corps, un réceptacle capable de 'fixer l'invisible' et de charger les énergies. Tant qu'il est cubique, il est prêt à absorber."
+        },
+        "sel_chou_fleur": {
+          "label": "Sel Chou-fleur",
+          "icone": "🥦",
+          "description": "Cristallisation anarchique (efflorescence). C'est le signe que le sel a été saturé par l'humidité ou les charges énergétiques. Il a 'fini de pomper'."
+        }
+      },
+      "avertissement_patrick": "Si le sel fond (par exemple dans les toilettes), il libère instantanément toute l'énergie qu'il avait capturée. On l'évacue pour s'en débarrasser, pas pour le conserver liquide.",
+      "rappel_pratique": [
+        "Le Cube se forme par refroidissement lent et repos total.",
+        "Le Chou-fleur se forme par évaporation rapide ou saturation atmosphérique."
+      ],
+      "type_affichage": "comparatif_technique"
+    }
+  ]
+}
